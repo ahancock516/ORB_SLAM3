@@ -982,7 +982,7 @@ void LoopClosing::CorrectLoop()
         unique_lock<mutex> lock(mMutexGBA);
         mbStopGBA = true;
 
-        mnFullBAIdx++;
+        mnFullBAIdx = (mnFullBAIdx + 1) & 0xFF;
 
         if(mpThreadGBA)
         {
@@ -1233,7 +1233,7 @@ void LoopClosing::MergeLocal()
         unique_lock<mutex> lock(mMutexGBA);
         mbStopGBA = true;
 
-        mnFullBAIdx++;
+        mnFullBAIdx = (mnFullBAIdx + 1) & 0xFF;
 
         if(mpThreadGBA)
         {
@@ -1806,7 +1806,7 @@ void LoopClosing::MergeLocal2()
         unique_lock<mutex> lock(mMutexGBA);
         mbStopGBA = true;
 
-        mnFullBAIdx++;
+        mnFullBAIdx = (mnFullBAIdx + 1) & 0xFF;
 
         if(mpThreadGBA)
         {
@@ -2297,7 +2297,7 @@ void LoopClosing::RunGlobalBundleAdjustment(Map* pActiveMap, unsigned long nLoop
     }
 #endif
 
-    int idx =  mnFullBAIdx;
+    int idx = mnFullBAIdx;
     // Optimizer::GlobalBundleAdjustemnt(mpMap,10,&mbStopGBA,nLoopKF,false);
 
     // Update all MapPoints and KeyFrames
@@ -2306,7 +2306,7 @@ void LoopClosing::RunGlobalBundleAdjustment(Map* pActiveMap, unsigned long nLoop
     // We need to propagate the correction through the spanning tree
     {
         unique_lock<mutex> lock(mMutexGBA);
-        if(idx!=mnFullBAIdx)
+        if(idx != mnFullBAIdx)
             return;
 
         if(!bImuInit && pActiveMap->isImuInitialized())
